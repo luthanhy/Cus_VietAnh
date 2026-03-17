@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #1e3a5f;
+  --accent: #e8b923;
+  --accent-dark: #c99a1a;
+}
+
+body {
+  @apply antialiased text-gray-800;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
