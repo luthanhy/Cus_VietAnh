@@ -2,10 +2,11 @@
 
 interface HeroSectionProps {
   quyKhach: string
+  thoiGian?: string
   onRegister?: () => void
 }
 
-export default function HeroSection({ quyKhach, onRegister }: HeroSectionProps) {
+export default function HeroSection({ quyKhach, thoiGian, onRegister }: HeroSectionProps) {
   return (
     <>
       {/* Hero: full-width banner như giao diện mẫu */}
@@ -57,7 +58,7 @@ export default function HeroSection({ quyKhach, onRegister }: HeroSectionProps) 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 justify-center text-white/95 text-sm mb-8">
             <span className="flex items-center justify-center gap-2">
               <span className="text-[#e8b923]" aria-hidden>⏰</span>
-              Thời gian: 90 phút
+              Thời gian: {thoiGian || '08:30 Ngày 20/11'}
             </span>
             <span className="flex items-center justify-center gap-2">
               <span className="text-[#e8b923]" aria-hidden>📍</span>

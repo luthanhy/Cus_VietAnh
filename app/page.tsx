@@ -15,6 +15,7 @@ import RegistrationModal from '@/components/RegistrationModal'
 function HomeContent() {
   const searchParams = useSearchParams()
   const guestName = searchParams.get('guest')?.trim() || 'quý khách'
+  const thoiGian = searchParams.get('time')?.trim()
 
   const [showModal, setShowModal] = useState(false)
 
@@ -32,7 +33,7 @@ function HomeContent() {
 
   return (
     <main className="min-h-screen">
-      <HeroSection quyKhach={guestName} onRegister={() => setShowModal(true)} />
+      <HeroSection quyKhach={guestName} thoiGian={thoiGian} onRegister={() => setShowModal(true)} />
       <ExploreSchool />
       <WhyAttend />
       <TimelineSection />

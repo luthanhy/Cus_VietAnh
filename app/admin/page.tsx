@@ -5,15 +5,37 @@ import Link from 'next/link'
 
 export default function AdminPage() {
   const [tenKhach, setTenKhach] = useState('')
+  const [dateTime, setDateTime] = useState('')
   const [copied, setCopied] = useState(false)
   const [message, setMessage] = useState('')
+
+  const formatDateTime = (dtStr: string) => {
+    if (!dtStr) return ''
+    const date = new Date(dtStr)
+    // Extract time (HH:MM)
+    const hours = date.getHours().toString().padStart(2, '0')
+    const minutes = date.getMinutes().toString().padStart(2, '0')
+    // Extract date (DD/MM/YYYY)
+    const day = date.getDate().toString().padStart(2, '0')
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    const year = date.getFullYear()
+    
+    return `${hours}:${minutes} Ngày ${day}/${month}/${year}`
+  }
 
   const getInviteUrl = useCallback(() => {
     if (typeof window === 'undefined') return ''
     const base = window.location.origin
     const guest = tenKhach.trim() || 'quý khách'
-    return `${base}/?guest=${encodeURIComponent(guest)}`
-  }, [tenKhach])
+    const formattedTime = formatDateTime(dateTime)
+    
+    const params = new URLSearchParams()
+    if (guest !== 'quý khách') params.append('guest', guest)
+    if (formattedTime) params.append('time', formattedTime)
+    
+    const queryString = params.toString()
+    return queryString ? `${base}/?${queryString}` : `${base}/`
+  }, [tenKhach, dateTime])
 
   const copyLink = useCallback(async () => {
     const url = getInviteUrl()
@@ -34,7 +56,7 @@ export default function AdminPage() {
     <main className="min-h-screen bg-gray-100 py-12 px-4">
       <div className="max-w-xl mx-auto bg-white rounded-xl shadow-lg p-8">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-[#1e3a5f]">Admin – Thay tên khách mời</h1>
+          <h1 className="text-2xl font-bold text-[#1e3a5f]">Admin – Thông tin khách mời</h1>
           <Link
             href="/"
             className="text-sm text-[#1e3a5f] hover:underline"
@@ -44,12 +66,12 @@ export default function AdminPage() {
         </div>
 
         <p className="text-gray-600 mb-6">
-          Nhập tên hoặc xưng hô thay cho &quot;quý khách&quot; trên trang mời. Sau đó tạo link và gửi cho khách; khi họ mở link, trang sẽ hiển thị đúng tên bạn đã điền.
+          Nhập tên và chọn thời gian để tạo link mời riêng. Thiết lập này sẽ cập nhật trực tiếp lên thời gian trên link đăng ký khách.
         </p>
 
-        <div className="mb-6">
+        <div className="mb-4">
           <label htmlFor="guest-name" className="block text-sm font-medium text-gray-700 mb-2">
-            Tên khách mời (thay cho &quot;quý khách&quot;)
+            Tên khách mời
           </label>
           <input
             id="guest-name"
@@ -57,6 +79,19 @@ export default function AdminPage() {
             value={tenKhach}
             onChange={(e) => setTenKhach(e.target.value)}
             placeholder="Ví dụ: Phụ huynh lớp Lá, Anh/Chị, ..."
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] outline-none"
+          />
+        </div>
+        
+        <div className="mb-6">
+          <label htmlFor="guest-datetime" className="block text-sm font-medium text-gray-700 mb-2">
+            Thời gian tổ chức (tùy chọn)
+          </label>
+          <input
+            id="guest-datetime"
+            type="datetime-local"
+            value={dateTime}
+            onChange={(e) => setDateTime(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#1e3a5f] focus:border-[#1e3a5f] outline-none"
           />
         </div>
@@ -95,7 +130,7 @@ export default function AdminPage() {
           rel="noopener noreferrer"
           className="inline-block py-2 px-4 text-[#1e3a5f] font-medium hover:underline"
         >
-          Mở trang mời với tên này →
+          Mở trang mời với URL này →
         </Link>
       </div>
 
